@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700&display=swap" rel="stylesheet">
+    <!--Import style.css-->
+    <link type="text/css" rel="stylesheet" href="style1.css"  media="screen,projection"/>
+    <meta charset="utf-8">
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UR Code</title>
+    <link rel="stylesheet" href="bootstrap-4.1.3-dist/css/bootstrap.min.css">
+  </head>
+
+  <body data-spy="scroll" data-rarget="#navbarResponsive" onload="init();">
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+
+    <!--- START NAV -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    	<a class="navbar-brand" href="index.html"><img src="img/URLogo_Final.png"></a>
+    	<button class="navbar-toggler" type="button" data-toggle="collapse"
+    	data-target="#navbarResponsive">
+    	<span class="navbar-toggler-icon"></span>
+    </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+    	<ul class="navbar-nav ml-auto">
+    		<li class="nav-item">
+    			<a class="nav-link" href="index.html">Home</a>
+    		</li>
+    		<li class="nav-item">
+    			<a class="nav-link" href="create.html" style="color:#1ebba3">Create New UR Code</a>
+    		</li>
+    		<li class="nav-item">
+    			<a class="nav-link" href="scan.html">Scan Existing UR Code</a>
+        </li>
+    	</ul>
+    </div>
+    </nav>
+  <!--- END NAV -->
+  <div class="dark-landing">
+  <div id="download" class="offset">
+  <div class="landing">
+  	<div class="home-wrap">
+  		<div class="home-inner">
+  		</div>
+  	</div>
+  </div>
+    <div id="download" class="offset">
+    <div class="col-12 narrow text-center">
+
+  			<div class="col-12">
+  				<h3 class="heading">Create UR Code</h3>
+  				<div class="heading-underline"></div>
+  			</div>
+                                <a class="btn btn-secondary btn-lg" onclick="snapshot();"><i class="fas fa-camera fa-lg"></i></a>
+                            </div>
+                            <div class="caption text-center">
+                            <div class="form-group-lg">
+                                    <input placeholder="Name Your UR Code" type="text" class="validate" id="ip">
+                            </div>
+                          </div>
+                        </div>
+                                                  </div>
+                              <div class="row text-center">
+
+                                <div class="col-md-6">
+                                  <h3>Webcam</h3>
+                                  <video onclick="snapshot(this);" width=300 height=300 id="video" controls autoplay></video>
+                                </div>
+                              <div class="col-md-6">
+                                <h3>Snapped UR Code</h3>
+                                <div>
+                                  <img src="img/URMascot.png" class="mascot"/>
+                              <canvas  id="myCanvas" width="300" height="230" class="over"></canvas>
+                                </div>
+                              <div class="clear"></div>
+        </div>
+        <div class="col-12 text-center">
+        <div id="container" style="display:none">
+          <h3 id="NoteHeader"></h3>
+        <textarea id="area" placeholder="What would you like to save inside the UR Code?" rows="10" cols="50"></textarea>
+        <p><a href="javascript:save(URCode);" class="button">Save</a>
+        <a href="javascript:clear();" class="button">Clear</a>
+        <a href="javascript:display_saved_note(URCode);" class="button">Undo Changes</a></p>
+        </div>
+        </div>
+        </div>
+      </div>
+
+                            <!--- START OF CONTACT SECTION -->
+                            <div id="contact" class="offset">
+
+                            <footer>
+                            	<div class="row justify-content-center">
+
+                            		<div class="col-md-6 text-center">
+                            			<img src="img/URMascot.png">
+                            			<p>Made with <i class="fa fa-heart fa-xs"></i> and <i class="fa fa-mug-hot fa-xs"></i> by <a href="https://www.linkedin.com/in/adammbinder/" target="_blank">Adam Binder</a>, <a href="https://www.linkedin.com/in/tayeba-monsur/" target="_blank">Tayeba Monsur</a>, and <a href="https://www.linkedin.com/in/boris--anthony/" target="_blank">Boris Anthony</a></p>
+                            			<strong>Contact Info</strong>
+                            			<p>URCodeApp@gmail.com</p>
+                            			<div class="social">
+                            			<a href="#" target="_blank"><i class="fab fa-facebook-square"></i></a>
+                            			<a href="#" target="_blank"><i class="fab fa-twitter-square"></i></a>
+                            		</div>
+                            		</div>
+
+                            		<hr class="socket">
+                            		&copy; 2020 UR Code.
+
+                            	</div>
+                            	</footer>
+                            </div>
+                            <!--- END OF CONTACT SECTION -->
+
+      <!--- Script Source Files -->
+      <script src="js/jquery-3.3.1.min.js"></script>
+      <script src="bootstrap-4.1.3-dist/js/bootstrap.min.js"></script>
+      <script src="https://use.fontawesome.com/releases/v5.7.0/js/all.js"></script>
+      <!--- End of Script Source Files -->
+      <audio id="myAudio">
+              <source src="success.mp3" type="audio/mp3">
+      </audio>
+  </body>
+
+
+  <script type="text/javascript">
+    //--------------------
+    // GET USER MEDIA CODE
+    //--------------------
+        navigator.getUserMedia = ( navigator.getUserMedia ||
+                           navigator.webkitGetUserMedia ||
+                           navigator.mozGetUserMedia ||
+                           navigator.msGetUserMedia);
+
+    var video;
+    var webcamStream;
+
+    function startWebcam() {
+      if (navigator.getUserMedia) {
+         navigator.getUserMedia (
+
+            // constraints
+            {
+               video: true,
+               audio: false
+            },
+
+            // successCallback
+            function(localMediaStream) {
+                video = document.querySelector('video');
+               video.srcObject = localMediaStream;
+               webcamStream = localMediaStream;
+            },
+
+            // errorCallback
+            function(err) {
+               console.log("The following error occured: " + err);
+            }
+         );
+      } else {
+         console.log("getUserMedia not supported");
+      }
+    }
+
+
+    //---------------------
+    // TAKE A SNAPSHOT CODE
+    //---------------------
+    var canvas, ctx;
+
+    function init() {
+      // Get the canvas and obtain a context for
+      // drawing in it
+      canvas = document.getElementById("myCanvas");
+      ctx = canvas.getContext('2d');
+      startWebcam();
+
+  var home = document.getElementById('container').innerHTML;
+  var controls = document.getElementById('controls').innerHTML;
+  var URCode;
+  //display_saved_note();
+    }
+
+    function snapshot() {
+
+      if(document.getElementById("ip").value !== "") {
+
+      ctx.drawImage(video, 0,0, canvas.width, canvas.height);
+      var img1 = new Image();
+      img1.src = canvas.toDataURL();
+      var x = document.getElementById("myAudio");
+      x.play();
+      var ip = document.getElementById('ip').value;
+      datad = "{\r\n    \"image\":\"" + img1.src+ "\",\r\n    \"subject_id\":\"" + ip + "\",\r\n    \"gallery_name\":\"Arti\"\r\n}";
+      var settings = {
+          "async": true,
+          "crossDomain": true,
+          "url": "https://api.kairos.com/enroll",
+          "method": "POST",
+          "headers": {
+              "content-type": "application/json",
+              "app_id": "ef6ea981",
+              "app_key": "cb31da1b0e8677a27548711cb9bbfdaa",
+              "cache-control": "no-cache"
+          },
+          "processData": false,
+          "data": datad
+      }
+
+      $.ajax(settings).done(function (response) {
+        //
+        var m = response;
+        console.log(JSON.stringify(m).indexOf("success"));
+        if(JSON.stringify(m).indexOf("success") > -1) {
+            Materialize.toast("Created a UR Code for " +response.images[0].transaction.subject_id+ "! You may start entering data into the UR Code below.", 3000);
+            URCode = response.images[0].transaction.subject_id
+            document.getElementById("NoteHeader").innerHTML = URCode + "'s UR Code";
+            var showContainer = document.getElementById("container");
+            showContainer.style.display = "block";
+            display_saved_note(URCode);
+        }
+        else{
+            Materialize.toast("Unable to detect a face to save into UR Code!", 2500);
+            var showContainer = document.getElementById("container");
+            showContainer.style.display = "none";
+        }
+      });
+      //console.log(img1.src);
+    }
+
+    else {
+      Materialize.toast("Please enter a name for your UR Code!", 2000);
+    }
+  }
+
+  function check_web_storage_support() {
+      if(typeof(Storage) !== "undefined") {
+          return(true);
+      }
+      else {
+          alert("Web storage unsupported!");
+          return(false);
+      }
+  }
+
+  function display_saved_note(URCode) {
+      if(check_web_storage_support() == true) {
+          result = localStorage.getItem(URCode);
+      }
+      if(result === null) {
+          result = "No note saved";
+      }
+      document.getElementById('area').value = result;
+  }
+
+  function save(URCode) {
+      if(check_web_storage_support() == true) {
+          var area = document.getElementById("area");
+          if(area.value != '') {
+              localStorage.setItem(URCode, area.value);
+              Materialize.toast(URCode + "'s UR Code Saved Successfully!", 2500);
+          }
+          else {
+              alert("There's nothing to save!");
+          }
+      }
+  }
+
+  function clear() {
+      document.getElementById('area').value = "";
+  }
+
+
+</script>
+</html>
